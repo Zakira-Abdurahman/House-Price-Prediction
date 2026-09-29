@@ -1,0 +1,29 @@
+# Convenience wrapper around `docker build` / `docker run` for local development.
+#
+#   docker compose up --build        # start the dashboard at http://localhost:8501
+#   docker compose run --rm test     # run the test suite inside the built image
+#
+services:
+  dashboard:
+    build: .
+    image: ethiopia-food-prices:local
+    ports:
+      - "8501:8501"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
+    restart: unless-stopped
+
+  # Runs pytest inside the same image used for the dashboard, so "tests pass" means
+  # "tests pass in the exact environment that gets deployed."
+  test:
+    build: .
+    image: ethiopia-food-prices:local
+    entrypoint: []
+    user: root  # installing requirements-dev.txt at run time needs write access to site-packages
+    command: >
+      sh -c "pip install --no-cache-dir -r requirements-dev.txt &&
+             pytest -q --cov=src --cov-report=term-missing"

@@ -1,0 +1,32 @@
+# Version control / editor
+.git
+.gitignore
+.vscode
+.idea
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+.venv/
+venv/
+
+# Notebooks and their checkpoints are dev-time artifacts, not needed by the runtime image
+notebooks/
+.ipynb_checkpoints/
+
+# Raw/experiment data that the running app never reads (kept in the repo for reproducibility only)
+models/experiments/
+
+# Docs and CI
+docs/
+.github/
+*.md
+!README.md
+
+# Local-only files
+.env
+.streamlit/secrets.toml
