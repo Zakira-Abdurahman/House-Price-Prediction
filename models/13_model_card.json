@@ -1,0 +1,31 @@
+{
+  "project": "Ethiopia Food Prices \u2014 cereals & tubers",
+  "generated": "2026-10-01",
+  "data_through": "2026-07-15",
+  "models": {
+    "single_series_national": {
+      "task": "Forecast national median Maize (white) retail USD price, one month ahead",
+      "method": "Drift (naive + trend extrapolation)",
+      "test_rmse_usd": 5.06,
+      "notebook": "06_baseline_forecasting.ipynb"
+    },
+    "panel_price_regression": {
+      "task": "Forecast next-month USD retail price for each cereal/tuber market x commodity series",
+      "method": "Persistence (naive)",
+      "test_rmse_usd": 6.421164798756792,
+      "notebook": "09_machine_learning_forecasting_cereals.ipynb, 13 (log-target retrain)",
+      "known_limitation": "KG vs 100 KG unit-scale mixing remains a partial confound even after the log-target fix; see 09 and 13.2."
+    },
+    "spike_classification": {
+      "task": "Predict whether a series will spike (|z|>2 month-over-month) next month",
+      "method": "Hist Gradient Boosting (class-weighted), retrained on all available data",
+      "test_pr_auc": 0.1198,
+      "decision_threshold": 0.3,
+      "notebook": "10_spike_prediction_cereals.ipynb, 13 (final retrain)",
+      "known_limitation": "Only ~3% positive rate; precision is modest even at the tuned threshold, calibrated for high recall over high precision by design."
+    }
+  },
+  "scope": "cereals and tubers category only (Maize, Teff, Wheat, Sorghum, Rice, Barley, Potatoes, and related items)",
+  "intended_use": "Early-warning shortlist and price-trend reference for food-security monitoring in Ethiopia; not a substitute for on-the-ground market verification.",
+  "not_intended_for": "Automated trading/procurement decisions, non-cereal commodities, or markets/series with under 12 months of reporting history (excluded from training)."
+}
